@@ -1,6 +1,89 @@
 // Animation et interactions avancées pour le portfolio
 
+// Cursor trail effect
+let cursorTrail = [];
+let maxTrailLength = 10;
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Créer le container pour les points de suivi
+    const trailContainer = document.createElement('div');
+    trailContainer.id = 'cursor-trail';
+    trailContainer.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9999;
+    `;
+    document.body.appendChild(trailContainer);
+
+    // Fonction pour créer un point de suivi
+    function createTrailDot(x, y) {
+        const dot = document.createElement('div');
+        dot.className = 'cursor-trail-dot';
+        dot.style.cssText = `
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle, rgba(75, 0, 130, 0.9), rgba(48, 25, 52, 0.7));
+            border-radius: 50%;
+            left: ${x - 3}px;
+            top: ${y - 3}px;
+            animation: trailFade 0.8s ease-out forwards;
+        `;
+        return dot;
+    }
+
+    // Suivi du curseur
+    document.addEventListener('mousemove', function(e) {
+        // Vérifier si on n'est pas dans la zone des tech items
+        const techOrbit = document.querySelector('.tech-orbit');
+        if (techOrbit) {
+            const rect = techOrbit.getBoundingClientRect();
+            if (e.clientX >= rect.left && e.clientX <= rect.right && 
+                e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                return; // Ne pas créer de trail dans cette zone
+            }
+        }
+
+        const dot = createTrailDot(e.clientX, e.clientY);
+        trailContainer.appendChild(dot);
+        
+        cursorTrail.push(dot);
+        
+        // Limiter le nombre de points
+        if (cursorTrail.length > maxTrailLength) {
+            const oldDot = cursorTrail.shift();
+            if (oldDot && oldDot.parentNode) {
+                oldDot.parentNode.removeChild(oldDot);
+            }
+        }
+        
+        // Supprimer le point après l'animation
+        setTimeout(() => {
+            if (dot && dot.parentNode) {
+                dot.parentNode.removeChild(dot);
+            }
+        }, 800);
+    });
+
+    // Ajouter les styles CSS pour l'animation
+    const trailStyles = document.createElement('style');
+    trailStyles.textContent = `
+        @keyframes trailFade {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+        }
+    `;
+    document.head.appendChild(trailStyles);
     // Navigation smooth scroll
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {

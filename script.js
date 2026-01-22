@@ -211,6 +211,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Animation step-by-step du timeline
+    const timelineItems = document.querySelectorAll('.timeline-item');
+    const timelineObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const step = parseInt(entry.target.dataset.step);
+                setTimeout(() => {
+                    entry.target.classList.add('animate');
+                }, (step - 1) * 300); // Délai de 300ms entre chaque élément
+            }
+        });
+    }, {
+        threshold: 0.3,
+        rootMargin: '0px 0px -100px 0px'
+    });
+
+    timelineItems.forEach(item => {
+        timelineObserver.observe(item);
+    });
+
     // Form submission avec animation
     const contactForm = document.querySelector('.contact-form form');
     if (contactForm) {

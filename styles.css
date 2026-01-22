@@ -1251,7 +1251,7 @@ section {
     .timeline-item {
         flex-direction: column;
         align-items: flex-start;
-        padding-left: 50px;
+        padding-left: 0;
         margin-bottom: 2rem;
     }
     
@@ -1265,8 +1265,9 @@ section {
     }
     
     .timeline-date {
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
         margin-top: 0;
+        margin-left: 50px;
         flex: none;
         width: auto;
         text-align: left;
@@ -1275,12 +1276,14 @@ section {
     .timeline-content {
         margin: 0;
         margin-top: 0;
-        width: 100%;
+        margin-left: 60px;
+        width: calc(100% - 80px);
         transform: none;
     }
     
     .timeline-item:nth-child(odd) .timeline-content {
         transform: none;
+        margin-left: 60px;
     }
     
     .projects-grid {
